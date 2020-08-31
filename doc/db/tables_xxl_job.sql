@@ -6,7 +6,7 @@ CREATE database if NOT EXISTS `xxl_job` default character set utf8mb4 collate ut
 use `xxl_job`;
 
 SET NAMES utf8mb4;
-
+-- job
 CREATE TABLE `xxl_job_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_group` int(11) NOT NULL COMMENT '执行器主键ID',
@@ -74,7 +74,7 @@ CREATE TABLE `xxl_job_logglue` (
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
+--job注册器
 CREATE TABLE `xxl_job_registry` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `registry_group` varchar(50) NOT NULL,
@@ -84,7 +84,7 @@ CREATE TABLE `xxl_job_registry` (
   PRIMARY KEY (`id`),
   KEY `i_g_k_v` (`registry_group`,`registry_key`,`registry_value`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
+-- job执行器
 CREATE TABLE `xxl_job_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `app_name` varchar(64) NOT NULL COMMENT '执行器AppName',
@@ -93,7 +93,7 @@ CREATE TABLE `xxl_job_group` (
   `address_list` varchar(512) DEFAULT NULL COMMENT '执行器地址列表，多地址逗号分隔',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
+-- 用户表
 CREATE TABLE `xxl_job_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL COMMENT '账号',
@@ -103,7 +103,7 @@ CREATE TABLE `xxl_job_user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `i_username` (`username`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
+-- job 锁表
 CREATE TABLE `xxl_job_lock` (
   `lock_name` varchar(50) NOT NULL COMMENT '锁名称',
   PRIMARY KEY (`lock_name`)
