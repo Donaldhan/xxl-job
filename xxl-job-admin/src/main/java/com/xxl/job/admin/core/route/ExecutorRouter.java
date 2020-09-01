@@ -15,7 +15,7 @@ public abstract class ExecutorRouter {
 
     /**
      * route address
-     *
+     * 执行器路由策略地址
      * @param addressList
      * @return  ReturnT.content=address
      */

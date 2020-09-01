@@ -32,13 +32,13 @@
 			#{item}
 		</foreach>
 	</delete>
-
+    <!--获取当前容忍超时探活的任务执行服务器列表-->
 	<select id="findAll" parameterType="java.util.HashMap" resultMap="XxlJobRegistry">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_registry AS t
 		WHERE t.update_time <![CDATA[ > ]]> DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
 	</select>
-
+    <!--更新执行服务器-->
     <update id="registryUpdate" >
         UPDATE xxl_job_registry
         SET `update_time` = #{updateTime}

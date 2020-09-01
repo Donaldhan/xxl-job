@@ -20,6 +20,7 @@ import java.util.*;
 
 /**
  * job group controller
+ * job 分组，执行器
  * @author xuxueli 2016-10-02 20:52:56
  */
 @Controller
@@ -71,12 +72,15 @@ public class JobGroupController {
 		if (xxlJobGroup.getTitle()==null || xxlJobGroup.getTitle().trim().length()==0) {
 			return new ReturnT<String>(500, (I18nUtil.getString("system_please_input") + I18nUtil.getString("jobgroup_field_title")) );
 		}
+//		执行器地址类型：0=自动注册、1=手动录入
 		if (xxlJobGroup.getAddressType()!=0) {
 			if (xxlJobGroup.getAddressList()==null || xxlJobGroup.getAddressList().trim().length()==0) {
 				return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_addressType_limit") );
 			}
+			//手动注册执行服务器地址
 			String[] addresss = xxlJobGroup.getAddressList().split(",");
 			for (String item: addresss) {
+				//check服务器地址
 				if (item==null || item.trim().length()==0) {
 					return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_registryList_unvalid") );
 				}
@@ -120,6 +124,7 @@ public class JobGroupController {
 			}
 			String[] addresss = xxlJobGroup.getAddressList().split(",");
 			for (String item: addresss) {
+				//check服务器地址
 				if (item==null || item.trim().length()==0) {
 					return new ReturnT<String>(500, I18nUtil.getString("jobgroup_field_registryList_unvalid") );
 				}
@@ -130,12 +135,18 @@ public class JobGroupController {
 		return (ret>0)?ReturnT.SUCCESS:ReturnT.FAIL;
 	}
 
+	/**
+	 * @param appnameParam
+	 * @return
+	 */
 	private List<String> findRegistryByAppName(String appnameParam){
 		HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
 		List<XxlJobRegistry> list = xxlJobRegistryDao.findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
+		//将应用执行服务器按应用名分组
 		if (list != null) {
 			for (XxlJobRegistry item: list) {
 				if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
+					//应用名
 					String appname = item.getRegistryKey();
 					List<String> registryList = appAddressMap.get(appname);
 					if (registryList == null) {

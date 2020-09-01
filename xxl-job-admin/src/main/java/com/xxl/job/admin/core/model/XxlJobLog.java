@@ -11,7 +11,13 @@ public class XxlJobLog {
 	private long id;
 	
 	// job info
+	/**
+	 * 任务分组
+	 */
 	private int jobGroup;
+	/**
+	 * 任务id
+	 */
 	private int jobId;
 
 	// execute info

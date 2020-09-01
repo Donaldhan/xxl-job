@@ -9,7 +9,13 @@ public class XxlJobRegistry {
 
     private int id;
     private String registryGroup;
+    /**
+     * 应用名
+     */
     private String registryKey;
+    /**
+     * 注册值，ip+port ，或者是域名， 要搞明白如果是域名的话如何处理
+     */
     private String registryValue;
     private Date updateTime;
 

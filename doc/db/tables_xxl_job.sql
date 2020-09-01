@@ -32,7 +32,7 @@ CREATE TABLE `xxl_job_info` (
   `trigger_next_time` bigint(13) NOT NULL DEFAULT '0' COMMENT '下次调度时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
+-- job执行日志
 CREATE TABLE `xxl_job_log` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `job_group` int(11) NOT NULL COMMENT '执行器主键ID',
@@ -53,7 +53,7 @@ CREATE TABLE `xxl_job_log` (
   KEY `I_trigger_time` (`trigger_time`),
   KEY `I_handle_code` (`handle_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
+-- job执行报告
 CREATE TABLE `xxl_job_log_report` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `trigger_day` datetime DEFAULT NULL COMMENT '调度-时间',
@@ -74,7 +74,7 @@ CREATE TABLE `xxl_job_logglue` (
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
---job注册器
+-- job执行器注册表，当客户端启动时，注册到相应的执行器分组下面，分组，应用名，执行服务器列表（ip:port， 域名）
 CREATE TABLE `xxl_job_registry` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `registry_group` varchar(50) NOT NULL,

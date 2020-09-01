@@ -42,6 +42,12 @@ public class IndexController {
 		return "index";
 	}
 
+	/**
+	 * 获取任务执行报告
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
     @RequestMapping("/chartInfo")
 	@ResponseBody
 	public ReturnT<Map<String, Object>> chartInfo(Date startDate, Date endDate) {

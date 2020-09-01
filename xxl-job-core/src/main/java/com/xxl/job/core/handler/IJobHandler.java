@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * job handler
- *
+ * 任务执行器，成功，失败，超时失败
  * @author xuxueli 2015-12-19 19:06:38
  */
 public abstract class IJobHandler {

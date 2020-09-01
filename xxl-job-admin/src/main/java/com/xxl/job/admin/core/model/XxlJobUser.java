@@ -53,6 +53,11 @@ public class XxlJobUser {
 		this.permission = permission;
 	}
 
+	/**
+	 * 校验是否具有执行器权限
+	 * @param jobGroup
+	 * @return
+	 */
 	// plugin
 	public boolean validPermission(int jobGroup){
 		if (this.role == 1) {
