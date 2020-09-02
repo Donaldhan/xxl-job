@@ -68,6 +68,7 @@ public class JobTriggerPoolHelper {
 
     /**
      * add trigger
+     * 添加job触发器
      */
     public void addTrigger(final int jobId,
                            final TriggerTypeEnum triggerType,
@@ -91,7 +92,7 @@ public class JobTriggerPoolHelper {
                 long start = System.currentTimeMillis();
 
                 try {
-                    // do trigger
+                    // do trigger 触发远程执行服务器，执行job
                     XxlJobTrigger.trigger(jobId, triggerType, failRetryCount, executorShardingParam, executorParam, addressList);
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
@@ -133,12 +134,13 @@ public class JobTriggerPoolHelper {
     }
 
     /**
+     * 触发job
      * @param jobId
      * @param triggerType
      * @param failRetryCount
      * 			>=0: use this param
      * 			<0: use param from job info config
-     * @param executorShardingParam
+     * @param executorShardingParam 分片参数 "index/total"
      * @param executorParam
      *          null: use job param
      *          not null: cover job param

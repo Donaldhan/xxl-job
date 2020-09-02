@@ -249,6 +249,11 @@ public class XxlJobServiceImpl implements XxlJobService {
 		return ReturnT.SUCCESS;
 	}
 
+	/**
+	 * 更新定时任务状态及下次触发的时间，落库
+	 * @param id
+	 * @return
+	 */
 	@Override
 	public ReturnT<String> start(int id) {
 		XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);
@@ -265,7 +270,7 @@ public class XxlJobServiceImpl implements XxlJobService {
 			logger.error(e.getMessage(), e);
 			return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("jobinfo_field_cron_unvalid")+" | "+ e.getMessage());
 		}
-
+        //调度状态：0-停止，1-运行
 		xxlJobInfo.setTriggerStatus(1);
 		xxlJobInfo.setTriggerLastTime(0);
 		xxlJobInfo.setTriggerNextTime(nextTriggerTime);
@@ -275,6 +280,11 @@ public class XxlJobServiceImpl implements XxlJobService {
 		return ReturnT.SUCCESS;
 	}
 
+	/**
+	 * 更新定时任务状态及下次触发的时间，落库
+	 * @param id
+	 * @return
+	 */
 	@Override
 	public ReturnT<String> stop(int id) {
         XxlJobInfo xxlJobInfo = xxlJobInfoDao.loadById(id);

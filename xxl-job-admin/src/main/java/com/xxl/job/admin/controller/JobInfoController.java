@@ -156,7 +156,7 @@ public class JobInfoController {
 	}
 
 	/**
-	 * 触发
+	 * 执行一次
 	 * @param id
 	 * @param executorParam
 	 * @param addressList
@@ -175,6 +175,11 @@ public class JobInfoController {
 		return ReturnT.SUCCESS;
 	}
 
+	/**
+	 * 下次触发的时间
+	 * @param cron
+	 * @return
+	 */
 	@RequestMapping("/nextTriggerTime")
 	@ResponseBody
 	public ReturnT<List<String>> nextTriggerTime(String cron) {

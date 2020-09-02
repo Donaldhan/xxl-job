@@ -26,11 +26,29 @@ public class XxlJobExecutor  {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobExecutor.class);
 
     // ---------------------- param ----------------------
+    /**
+     * 管理后台地址
+     */
     private String adminAddresses;
+    /**
+     * 访问token
+     */
     private String accessToken;
+    /**
+     * 应用名
+     */
     private String appname;
+    /**
+     * 域名
+     */
     private String address;
+    /**
+     *
+     */
     private String ip;
+    /**
+     *
+     */
     private int port;
     private String logPath;
     private int logRetentionDays;
@@ -164,17 +182,40 @@ public class XxlJobExecutor  {
 
     // ---------------------- job handler repository ----------------------
     private static ConcurrentMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
+
+    /**
+     * 注册job处理器
+     * @param name
+     * @param jobHandler
+     * @return
+     */
     public static IJobHandler registJobHandler(String name, IJobHandler jobHandler){
         logger.info(">>>>>>>>>>> xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
         return jobHandlerRepository.put(name, jobHandler);
     }
+
+    /**
+     * @param name
+     * @return
+     */
     public static IJobHandler loadJobHandler(String name){
         return jobHandlerRepository.get(name);
     }
 
 
     // ---------------------- job thread repository ----------------------
+    /**
+     * job线程管理器
+     */
     private static ConcurrentMap<Integer, JobThread> jobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
+
+    /**
+     * 注册job执行器
+     * @param jobId
+     * @param handler
+     * @param removeOldReason
+     * @return
+     */
     public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
         JobThread newJobThread = new JobThread(jobId, handler);
         newJobThread.start();
@@ -188,6 +229,12 @@ public class XxlJobExecutor  {
 
         return newJobThread;
     }
+
+    /**
+     * @param jobId
+     * @param removeOldReason
+     * @return
+     */
     public static JobThread removeJobThread(int jobId, String removeOldReason){
         JobThread oldJobThread = jobThreadRepository.remove(jobId);
         if (oldJobThread != null) {
@@ -198,6 +245,12 @@ public class XxlJobExecutor  {
         }
         return null;
     }
+
+    /**
+     * 加载job执行线程
+     * @param jobId
+     * @return
+     */
     public static JobThread loadJobThread(int jobId){
         JobThread jobThread = jobThreadRepository.get(jobId);
         return jobThread;

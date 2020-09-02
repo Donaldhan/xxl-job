@@ -77,7 +77,17 @@ public class XxlJobScheduler  {
     }
 
     // ---------------------- executor-client ----------------------
+    /**
+     * 执行器客户端
+     */
     private static ConcurrentMap<String, ExecutorBiz> executorBizRepository = new ConcurrentHashMap<String, ExecutorBiz>();
+
+    /**
+     * 获取给定地址的执行器，存在则直接从缓存加载，否则放到执行器客户端池
+     * @param address
+     * @return
+     * @throws Exception
+     */
     public static ExecutorBiz getExecutorBiz(String address) throws Exception {
         // valid
         if (address==null || address.trim().length()==0) {

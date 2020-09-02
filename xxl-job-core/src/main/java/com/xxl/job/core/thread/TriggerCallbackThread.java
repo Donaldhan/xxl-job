@@ -32,8 +32,14 @@ public class TriggerCallbackThread {
 
     /**
      * job results callback queue
+     * 任务执行结果队列
      */
     private LinkedBlockingQueue<HandleCallbackParam> callBackQueue = new LinkedBlockingQueue<HandleCallbackParam>();
+
+    /**
+     * 添加执行
+     * @param callback
+     */
     public static void pushCallBack(HandleCallbackParam callback){
         getInstance().callBackQueue.add(callback);
         logger.debug(">>>>>>>>>>> xxl-job, push callback request, logId:{}", callback.getLogId());
@@ -157,6 +163,7 @@ public class TriggerCallbackThread {
 
     /**
      * do callback, will retry if error
+     * 通知job admin
      * @param callbackParamList
      */
     private void doCallback(List<HandleCallbackParam> callbackParamList){

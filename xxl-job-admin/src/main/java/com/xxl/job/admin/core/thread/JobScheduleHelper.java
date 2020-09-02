@@ -26,6 +26,9 @@ public class JobScheduleHelper {
         return instance;
     }
 
+    /**
+     * 预读5s
+     */
     public static final long PRE_READ_MS = 5000;    // pre read
 
     private Thread scheduleThread;

@@ -34,10 +34,12 @@ public class ExecutorBizImpl implements ExecutorBiz {
         boolean isRunningOrHasQueue = false;
         JobThread jobThread = XxlJobExecutor.loadJobThread(idleBeatParam.getJobId());
         if (jobThread != null && jobThread.isRunningOrHasQueue()) {
+            //不存在，则空闲
             isRunningOrHasQueue = true;
         }
 
         if (isRunningOrHasQueue) {
+            //空闲
             return new ReturnT<String>(ReturnT.FAIL_CODE, "job thread is running or has trigger queue.");
         }
         return ReturnT.SUCCESS;
@@ -45,16 +47,16 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
     @Override
     public ReturnT<String> run(TriggerParam triggerParam) {
-        // load old：jobHandler + jobThread
+        // load old：jobHandler + jobThread ，从job任务执行器，加载job线程
         JobThread jobThread = XxlJobExecutor.loadJobThread(triggerParam.getJobId());
         IJobHandler jobHandler = jobThread!=null?jobThread.getHandler():null;
         String removeOldReason = null;
 
-        // valid：jobHandler + jobThread
+        // valid：jobHandler + jobThread 校验 job线程和job处理器
         GlueTypeEnum glueTypeEnum = GlueTypeEnum.match(triggerParam.getGlueType());
         if (GlueTypeEnum.BEAN == glueTypeEnum) {
 
-            // new jobhandler
+            // new jobhandler 创建执行器handler
             IJobHandler newJobHandler = XxlJobExecutor.loadJobHandler(triggerParam.getExecutorHandler());
 
             // valid old jobThread
@@ -140,6 +142,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
         // replace thread (new or exists invalid)
         if (jobThread == null) {
+            //注册job到job执行器
             jobThread = XxlJobExecutor.registJobThread(triggerParam.getJobId(), jobHandler, removeOldReason);
         }
 

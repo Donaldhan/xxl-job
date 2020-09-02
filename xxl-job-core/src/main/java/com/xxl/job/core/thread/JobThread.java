@@ -22,13 +22,20 @@ import java.util.concurrent.*;
 
 /**
  * handler thread
+ * 任务处理器线程
  * @author xuxueli 2016-1-16 19:52:47
  */
 public class JobThread extends Thread{
 	private static Logger logger = LoggerFactory.getLogger(JobThread.class);
 
 	private int jobId;
+	/**
+	 * job处理器
+	 */
 	private IJobHandler handler;
+	/**
+	 * 触发任务队列
+	 */
 	private LinkedBlockingQueue<TriggerParam> triggerQueue;
 	private Set<Long> triggerLogIdSet;		// avoid repeat trigger for the same TRIGGER_LOG_ID
 
