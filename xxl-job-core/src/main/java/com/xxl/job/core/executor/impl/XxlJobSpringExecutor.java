@@ -28,17 +28,20 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
     private static final Logger logger = LoggerFactory.getLogger(XxlJobSpringExecutor.class);
 
 
+    /**
+     *
+     */
     // start
     @Override
     public void afterSingletonsInstantiated() {
 
-        // init JobHandler Repository
+        // init JobHandler Repository 老版本使用
         /*initJobHandlerRepository(applicationContext);*/
 
-        // init JobHandler Repository (for method)
+        // init JobHandler Repository (for method) 初始化方法级job
         initJobHandlerMethodRepository(applicationContext);
 
-        // refresh GlueFactory
+        // refresh GlueFactory，刷新GLUE工厂类型
         GlueFactory.refreshInstance(1);
 
         // super start
@@ -56,7 +59,7 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
     }
 
 
-    /*private void initJobHandlerRepository(ApplicationContext applicationContext) {
+   /* private void initJobHandlerRepository(ApplicationContext applicationContext) {
         if (applicationContext == null) {
             return;
         }
@@ -78,6 +81,10 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         }
     }*/
 
+    /**
+     *  初始化方法级job
+     * @param applicationContext
+     */
     private void initJobHandlerMethodRepository(ApplicationContext applicationContext) {
         if (applicationContext == null) {
             return;
@@ -86,8 +93,9 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         String[] beanDefinitionNames = applicationContext.getBeanNamesForType(Object.class, false, true);
         for (String beanDefinitionName : beanDefinitionNames) {
             Object bean = applicationContext.getBean(beanDefinitionName);
-
-            Map<Method, XxlJob> annotatedMethods = null;   // referred to ：org.springframework.context.event.EventListenerMethodProcessor.processBean
+            // referred to ：org.springframework.context.event.EventListenerMethodProcessor.processBean
+            //扫描应用上下文中bean的XxlJob注解方法
+            Map<Method, XxlJob> annotatedMethods = null;
             try {
                 annotatedMethods = MethodIntrospector.selectMethods(bean.getClass(),
                         new MethodIntrospector.MetadataLookup<XxlJob>() {
@@ -109,30 +117,31 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                 if (xxlJob == null) {
                     continue;
                 }
-
+                //job名称
                 String name = xxlJob.value();
                 if (name.trim().length() == 0) {
                     throw new RuntimeException("xxl-job method-jobhandler name invalid, for[" + bean.getClass() + "#" + method.getName() + "] .");
                 }
+                //check是否存在同名的job
                 if (loadJobHandler(name) != null) {
                     throw new RuntimeException("xxl-job jobhandler[" + name + "] naming conflicts.");
                 }
 
-                // execute method
+                // execute method， 参数检查，只能有可一个参数，并且为Strng类型
                 if (!(method.getParameterTypes().length == 1 && method.getParameterTypes()[0].isAssignableFrom(String.class))) {
                     throw new RuntimeException("xxl-job method-jobhandler param-classtype invalid, for[" + bean.getClass() + "#" + method.getName() + "] , " +
                             "The correct method format like \" public ReturnT<String> execute(String param) \" .");
                 }
+                //检查返回值类型
                 if (!method.getReturnType().isAssignableFrom(ReturnT.class)) {
                     throw new RuntimeException("xxl-job method-jobhandler return-classtype invalid, for[" + bean.getClass() + "#" + method.getName() + "] , " +
                             "The correct method format like \" public ReturnT<String> execute(String param) \" .");
                 }
                 method.setAccessible(true);
 
-                // init and destory
+                // init and destory ， 初始化job，init和销毁方法
                 Method initMethod = null;
                 Method destroyMethod = null;
-
                 if (xxlJob.init().trim().length() > 0) {
                     try {
                         initMethod = bean.getClass().getDeclaredMethod(xxlJob.init());
@@ -150,14 +159,16 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                     }
                 }
 
-                // registry jobhandler
+                // registry jobhandler， 注册job处理器
                 registJobHandler(name, new MethodJobHandler(bean, method, initMethod, destroyMethod));
             }
         }
 
     }
 
-    // ---------------------- applicationContext ----------------------
+    /**
+     * applicationContext
+     */
     private static ApplicationContext applicationContext;
 
     @Override

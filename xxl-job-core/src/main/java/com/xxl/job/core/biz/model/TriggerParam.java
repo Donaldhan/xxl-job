@@ -10,11 +10,23 @@ public class TriggerParam implements Serializable{
 
     private int jobId;
 
+    /**
+     * 执行处理器
+     */
     private String executorHandler;
+    /**
+     * 执行参数
+     */
     private String executorParams;
     private String executorBlockStrategy;
+    /**
+     * 执行器超时时间
+     */
     private int executorTimeout;
 
+    /**
+     * job日志id
+     */
     private long logId;
     private long logDateTime;
 
@@ -22,7 +34,13 @@ public class TriggerParam implements Serializable{
     private String glueSource;
     private long glueUpdatetime;
 
+    /**
+     * 分片任务广播索引
+     */
     private int broadcastIndex;
+    /**
+     * 分片任务广播数量
+     */
     private int broadcastTotal;
 
 

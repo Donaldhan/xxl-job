@@ -20,7 +20,7 @@ import java.util.Set;
 
 /**
  * job alarm by email
- *
+ * job 失败邮件告警
  * @author xuxueli 2020-01-19
  */
 @Component

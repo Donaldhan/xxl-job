@@ -40,7 +40,7 @@ public interface ExecutorBiz {
     public ReturnT<String> kill(KillParam killParam);
 
     /**
-     * log
+     * log 通知日志
      * @param logParam
      * @return
      */

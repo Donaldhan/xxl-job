@@ -15,7 +15,7 @@ import java.util.Arrays;
 
 /**
  * xxl-job config
- *
+ * admin job 配置
  * @author xuxueli 2017-04-28
  */
 
@@ -35,7 +35,7 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         adminConfig = this;
-
+        //初始化job调度器
         xxlJobScheduler = new XxlJobScheduler();
         xxlJobScheduler.init();
     }

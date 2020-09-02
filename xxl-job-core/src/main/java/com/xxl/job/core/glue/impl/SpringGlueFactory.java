@@ -21,6 +21,7 @@ public class SpringGlueFactory extends GlueFactory {
 
     /**
      * inject action of spring
+     * IJobHandler类型job，需要处理依赖注入
      * @param instance
      */
     @Override

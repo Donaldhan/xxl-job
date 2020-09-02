@@ -16,7 +16,7 @@ public interface AdminBiz {
 
     /**
      * callback
-     *
+     * job执行回调通知
      * @param callbackParamList
      * @return
      */
@@ -27,7 +27,7 @@ public interface AdminBiz {
 
     /**
      * registry
-     *
+     * 注册job执行服务器
      * @param registryParam
      * @return
      */
@@ -35,7 +35,7 @@ public interface AdminBiz {
 
     /**
      * registry remove
-     *
+     * 移除job执行服务器
      * @param registryParam
      * @return
      */

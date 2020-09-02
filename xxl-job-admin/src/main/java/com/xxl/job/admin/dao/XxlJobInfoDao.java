@@ -41,6 +41,12 @@ public interface XxlJobInfoDao {
 
 	public int findAllCount();
 
+	/**
+	 * 查询下次调度时间在跟定调度时间范围内的调度任务
+	 * @param maxNextTime
+	 * @param pagesize
+	 * @return
+	 */
 	public List<XxlJobInfo> scheduleJobQuery(@Param("maxNextTime") long maxNextTime, @Param("pagesize") int pagesize );
 
 	public int scheduleUpdate(XxlJobInfo xxlJobInfo);

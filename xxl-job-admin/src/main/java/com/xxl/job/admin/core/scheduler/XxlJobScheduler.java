@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
+ * job调度器
  * @author xuxueli 2018-10-28 00:18:17
  */
 
@@ -24,22 +25,22 @@ public class XxlJobScheduler  {
         // init i18n
         initI18n();
 
-        // admin registry monitor run
+        // admin registry monitor run 启动任务执行器注册监控
         JobRegistryMonitorHelper.getInstance().start();
 
-        // admin fail-monitor run
+        // admin fail-monitor run 启动任务失败监控器
         JobFailMonitorHelper.getInstance().start();
 
-        // admin lose-monitor run
+        // admin lose-monitor run 启动丢失任务监控器
         JobLosedMonitorHelper.getInstance().start();
 
-        // admin trigger pool start
+        // admin trigger pool start 启动job触发线程池
         JobTriggerPoolHelper.toStart();
 
-        // admin log report start
+        // admin log report start 启动任务日志报告
         JobLogReportHelper.getInstance().start();
 
-        // start-schedule
+        // start-schedule 启动任务调度器
         JobScheduleHelper.getInstance().start();
 
         logger.info(">>>>>>>>> init xxl-job admin success.");

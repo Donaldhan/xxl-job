@@ -13,13 +13,24 @@ import java.util.List;
 @Mapper
 public interface XxlJobRegistryDao {
 
+    /**
+     * 获取心跳停止的服务器
+     * @param timeout
+     * @param nowTime
+     * @return
+     */
     public List<Integer> findDead(@Param("timeout") int timeout,
                                   @Param("nowTime") Date nowTime);
 
+    /**
+     * 移除心跳停止的服务器
+     * @param ids
+     * @return
+     */
     public int removeDead(@Param("ids") List<Integer> ids);
 
     /**
-     *
+     * 获取存活的服务器
      * @param timeout
      * @param nowTime
      * @return

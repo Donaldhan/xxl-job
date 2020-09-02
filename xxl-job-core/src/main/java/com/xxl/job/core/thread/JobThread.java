@@ -116,10 +116,12 @@ public class JobThread extends Thread{
             ReturnT<String> executeResult = null;
             try {
 				// to check toStop signal, we need cycle, so wo cannot use queue.take(), instand of poll(timeout)
+				//从job线程触发队列中，拉取触发参数
 				triggerParam = triggerQueue.poll(3L, TimeUnit.SECONDS);
 				if (triggerParam!=null) {
 					running = true;
 					idleTimes = 0;
+					//从日志id集合set中移除，相应的日志id
 					triggerLogIdSet.remove(triggerParam.getLogId());
 
 					// log filename, like "logPath/yyyy-MM-dd/9999.log"
@@ -131,7 +133,7 @@ public class JobThread extends Thread{
 					XxlJobLogger.log("<br>----------- xxl-job job execute start -----------<br>----------- Param:" + triggerParam.getExecutorParams());
 
 					if (triggerParam.getExecutorTimeout() > 0) {
-						// limit timeout
+						// limit timeout， 如果超时时间没有
 						Thread futureThread = null;
 						try {
 							final TriggerParam triggerParamTmp = triggerParam;
@@ -143,7 +145,7 @@ public class JobThread extends Thread{
 							});
 							futureThread = new Thread(futureTask);
 							futureThread.start();
-
+                            //超时等待执行结果
 							executeResult = futureTask.get(triggerParam.getExecutorTimeout(), TimeUnit.SECONDS);
 						} catch (TimeoutException e) {
 
@@ -155,7 +157,7 @@ public class JobThread extends Thread{
 							futureThread.interrupt();
 						}
 					} else {
-						// just execute
+						// just execute， 否则立即执行相应的job
 						executeResult = handler.execute(triggerParam.getExecutorParams());
 					}
 
@@ -171,6 +173,7 @@ public class JobThread extends Thread{
 					XxlJobLogger.log("<br>----------- xxl-job job execute end(finish) -----------<br>----------- ReturnT:" + executeResult);
 
 				} else {
+					//触发执行器列表为空，则从执行器移除相应的job
 					if (idleTimes > 30) {
 						if(triggerQueue.size() == 0) {	// avoid concurrent trigger causes jobId-lost
 							XxlJobExecutor.removeJobThread(jobId, "excutor idel times over limit.");
@@ -192,7 +195,7 @@ public class JobThread extends Thread{
                 if(triggerParam != null) {
                     // callback handler info
                     if (!toStop) {
-                        // commonm
+                        // commonm 任务执行回调通知
                         TriggerCallbackThread.pushCallBack(new HandleCallbackParam(triggerParam.getLogId(), triggerParam.getLogDateTime(), executeResult));
                     } else {
                         // is killed
@@ -203,7 +206,7 @@ public class JobThread extends Thread{
             }
         }
 
-		// callback trigger request in queue
+		// callback trigger request in queue， 执行器关闭，则丢弃相应的job
 		while(triggerQueue !=null && triggerQueue.size()>0){
 			TriggerParam triggerParam = triggerQueue.poll();
 			if (triggerParam!=null) {

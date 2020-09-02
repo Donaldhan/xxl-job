@@ -207,7 +207,7 @@
 		FROM xxl_job_info
 	</select>
 
-
+    <!--查询下次调度时间在跟定调度时间范围内的调度任务-->
 	<select id="scheduleJobQuery" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_info AS t

@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * job trigger thread pool helper
- *
+ * job触发线程池
  * @author xuxueli 2018-07-03 21:08:07
  */
 public class JobTriggerPoolHelper {
@@ -24,6 +24,9 @@ public class JobTriggerPoolHelper {
     private ThreadPoolExecutor fastTriggerPool = null;
     private ThreadPoolExecutor slowTriggerPool = null;
 
+    /**
+     *
+     */
     public void start(){
         fastTriggerPool = new ThreadPoolExecutor(
                 10,

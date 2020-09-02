@@ -23,6 +23,11 @@ public class ExecutorRegistryThread {
 
     private Thread registryThread;
     private volatile boolean toStop = false;
+
+    /**
+     * @param appname
+     * @param address
+     */
     public void start(final String appname, final String address){
 
         // valid
@@ -39,7 +44,7 @@ public class ExecutorRegistryThread {
             @Override
             public void run() {
 
-                // registry
+                // registry  ， 注册job执行服务器， 保存出服务处于存活状态
                 while (!toStop) {
                     try {
                         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appname, address);
@@ -76,7 +81,7 @@ public class ExecutorRegistryThread {
                     }
                 }
 
-                // registry remove
+                // registry remove， 停止job执行器线程，则通知admin， job执行服务器下线
                 try {
                     RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appname, address);
                     for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
@@ -111,6 +116,9 @@ public class ExecutorRegistryThread {
         registryThread.start();
     }
 
+    /**
+     *
+     */
     public void toStop() {
         toStop = true;
         // interrupt and wait

@@ -21,10 +21,16 @@ public class GlueFactory {
 	public static GlueFactory getInstance(){
 		return glueFactory;
 	}
+
+	/**
+	 * 刷新GLUE工厂类型
+	 * @param type
+	 */
 	public static void refreshInstance(int type){
 		if (type == 0) {
 			glueFactory = new GlueFactory();
 		} else if (type == 1) {
+			//Spring glue 工厂
 			glueFactory = new SpringGlueFactory();
 		}
 	}
@@ -34,6 +40,9 @@ public class GlueFactory {
 	 * groovy class loader
 	 */
 	private GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
+	/**
+	 *
+	 */
 	private ConcurrentMap<String, Class<?>> CLASS_CACHE = new ConcurrentHashMap<>();
 
 	/**
@@ -49,7 +58,9 @@ public class GlueFactory {
 			if (clazz != null) {
 				Object instance = clazz.newInstance();
 				if (instance!=null) {
+					//IJobHandler类型job，需要处理依赖注入
 					if (instance instanceof IJobHandler) {
+						//处理SP让注入
 						this.injectService(instance);
 						return (IJobHandler) instance;
 					} else {
@@ -61,12 +72,18 @@ public class GlueFactory {
 		}
 		throw new IllegalArgumentException(">>>>>>>>>>> xxl-glue, loadNewInstance error, instance is null");
 	}
+
+	/**
+	 * 获取给定类型实例
+	 * @param codeSource
+	 * @return
+	 */
 	private Class<?> getCodeSourceClass(String codeSource){
 		try {
 			// md5
 			byte[] md5 = MessageDigest.getInstance("MD5").digest(codeSource.getBytes());
 			String md5Str = new BigInteger(1, md5).toString(16);
-
+			//从类缓存中，加载给你定的类，没有则放入缓存
 			Class<?> clazz = CLASS_CACHE.get(md5Str);
 			if(clazz == null){
 				clazz = groovyClassLoader.parseClass(codeSource);

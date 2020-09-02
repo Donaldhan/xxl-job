@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * job lose-monitor instance
- *
+ * 任务结果丢失处理：调度记录停留在 "运行中" 状态超过10min，且对应执行器心跳注册失败不在线，则将本地调度主动标记失败；
  * @author xuxueli 2015-9-1 18:05:56
  */
 public class JobLosedMonitorHelper {

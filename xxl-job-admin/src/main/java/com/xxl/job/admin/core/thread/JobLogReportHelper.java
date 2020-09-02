@@ -13,7 +13,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * job log report helper
- *
+ * 任务日志
+ * 报告统计最近3天的job执行报告， 并删除保留策略超时的报告
  * @author xuxueli 2019-11-22
  */
 public class JobLogReportHelper {

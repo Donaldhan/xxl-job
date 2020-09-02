@@ -24,7 +24,7 @@ import java.util.concurrent.*;
 
 /**
  * Copy from : https://github.com/xuxueli/xxl-rpc
- *
+ * 基于netty的嵌入式客户端
  * @author xuxueli 2020-04-11 21:25
  */
 public class EmbedServer {
@@ -33,6 +33,13 @@ public class EmbedServer {
     private ExecutorBiz executorBiz;
     private Thread thread;
 
+    /**
+     * 启动执行器server
+     * @param address
+     * @param port
+     * @param appname
+     * @param accessToken
+     */
     public void start(final String address, final int port, final String appname, final String accessToken) {
         executorBiz = new ExecutorBizImpl();
         thread = new Thread(new Runnable() {
@@ -64,7 +71,7 @@ public class EmbedServer {
 
 
                 try {
-                    // start server
+                    // start server 启动netty http server
                     ServerBootstrap bootstrap = new ServerBootstrap();
                     bootstrap.group(bossGroup, workerGroup)
                             .channel(NioServerSocketChannel.class)
@@ -85,7 +92,7 @@ public class EmbedServer {
 
                     logger.info(">>>>>>>>>>> xxl-job remoting server start success, nettype = {}, port = {}", EmbedServer.class, port);
 
-                    // start registry
+                    // start registry， 启动任务执行注册器线程
                     startRegistry(appname, address);
 
                     // wait util stop
@@ -114,13 +121,17 @@ public class EmbedServer {
         thread.start();
     }
 
+    /**
+     * 停止启动执行器server
+     * @throws Exception
+     */
     public void stop() throws Exception {
         // destroy server thread
         if (thread!=null && thread.isAlive()) {
             thread.interrupt();
         }
 
-        // stop registry
+        // stop registry， 停止job执行注册器
         stopRegistry();
         logger.info(">>>>>>>>>>> xxl-job remoting server destroy success.");
     }
@@ -162,7 +173,7 @@ public class EmbedServer {
             bizThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
-                    // do invoke
+                    // do invoke 处理http请求
                     Object responseObj = process(httpMethod, uri, requestData, accessTokenReq);
 
                     // to json
@@ -174,6 +185,14 @@ public class EmbedServer {
             });
         }
 
+        /**
+         * 处理admin http请求
+         * @param httpMethod
+         * @param uri
+         * @param requestData
+         * @param accessTokenReq
+         * @return
+         */
         private Object process(HttpMethod httpMethod, String uri, String requestData, String accessTokenReq) {
 
             // valid
@@ -192,14 +211,18 @@ public class EmbedServer {
             // services mapping
             try {
                 if ("/beat".equals(uri)) {
+                    //心跳
                     return executorBiz.beat();
                 } else if ("/idleBeat".equals(uri)) {
+                    //空闲心跳
                     IdleBeatParam idleBeatParam = GsonTool.fromJson(requestData, IdleBeatParam.class);
                     return executorBiz.idleBeat(idleBeatParam);
                 } else if ("/run".equals(uri)) {
+                    //执行job
                     TriggerParam triggerParam = GsonTool.fromJson(requestData, TriggerParam.class);
                     return executorBiz.run(triggerParam);
                 } else if ("/kill".equals(uri)) {
+                    //kill job
                     KillParam killParam = GsonTool.fromJson(requestData, KillParam.class);
                     return executorBiz.kill(killParam);
                 } else if ("/log".equals(uri)) {
@@ -252,11 +275,19 @@ public class EmbedServer {
 
     // ---------------------- registry ----------------------
 
+    /**
+     * 启动job执行服务器
+     * @param appname
+     * @param address
+     */
     public void startRegistry(final String appname, final String address) {
         // start registry
         ExecutorRegistryThread.getInstance().start(appname, address);
     }
 
+    /**
+     *停止job执行服务器
+     */
     public void stopRegistry() {
         // stop registry
         ExecutorRegistryThread.getInstance().toStop();

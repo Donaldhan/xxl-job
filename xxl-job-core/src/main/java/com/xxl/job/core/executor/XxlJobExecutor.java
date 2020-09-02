@@ -79,30 +79,37 @@ public class XxlJobExecutor  {
     }
 
 
-    // ---------------------- start + stop ----------------------
+    /**
+     * 启动job执行器
+     * @throws Exception
+     */
     public void start() throws Exception {
 
         // init logpath
         XxlJobFileAppender.initLogPath(logPath);
 
-        // init invoker, admin-client
+        // init invoker, admin-client 初始化job控制台客户端
         initAdminBizList(adminAddresses, accessToken);
 
 
-        // init JobLogFileCleanThread
+        // init JobLogFileCleanThread 开启日志清理线程
         JobLogFileCleanThread.getInstance().start(logRetentionDays);
 
-        // init TriggerCallbackThread
+        // init TriggerCallbackThread 开启触发回调线程
         TriggerCallbackThread.getInstance().start();
 
-        // init executor-server
+        // init executor-server 启动执行器server
         initEmbedServer(address, ip, port, appname, accessToken);
     }
+
+    /**
+     * 销毁job执行器
+     */
     public void destroy(){
         // destory executor-server
         stopEmbedServer();
 
-        // destory jobThreadRepository
+        // destory jobThreadRepository， 移除job执行器
         if (jobThreadRepository.size() > 0) {
             for (Map.Entry<Integer, JobThread> item: jobThreadRepository.entrySet()) {
                 JobThread oldJobThread = removeJobThread(item.getKey(), "web container destroy and kill the job.");
@@ -129,8 +136,17 @@ public class XxlJobExecutor  {
     }
 
 
-    // ---------------------- admin-client (rpc invoker) ----------------------
+    /**
+     * admin-client (rpc invoker)
+     */
     private static List<AdminBiz> adminBizList;
+
+    /**
+     * 初始化job控制台客户端
+     * @param adminAddresses
+     * @param accessToken
+     * @throws Exception
+     */
     private void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
         if (adminAddresses!=null && adminAddresses.trim().length()>0) {
             for (String address: adminAddresses.trim().split(",")) {
@@ -146,11 +162,17 @@ public class XxlJobExecutor  {
             }
         }
     }
+
+    /**
+     * @return
+     */
     public static List<AdminBiz> getAdminBizList(){
         return adminBizList;
     }
 
-    // ---------------------- executor-server (rpc provider) ----------------------
+    /**
+     * executor-server (rpc provider)
+     */
     private EmbedServer embedServer = null;
 
     private void initEmbedServer(String address, String ip, int port, String appname, String accessToken) throws Exception {
@@ -195,6 +217,7 @@ public class XxlJobExecutor  {
     }
 
     /**
+     * 加载job名
      * @param name
      * @return
      */
@@ -210,7 +233,7 @@ public class XxlJobExecutor  {
     private static ConcurrentMap<Integer, JobThread> jobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
 
     /**
-     * 注册job执行器
+     * 注册job执行器， 并启动job线程
      * @param jobId
      * @param handler
      * @param removeOldReason

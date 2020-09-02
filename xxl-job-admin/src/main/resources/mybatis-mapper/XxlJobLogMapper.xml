@@ -226,7 +226,7 @@
 			#{item}
 		</foreach>
 	</delete>
-
+   <!--查询失败的job日志-->
 	<select id="findFailJobLogIds" resultType="long" >
 		SELECT id FROM `xxl_job_log`
 		WHERE !(

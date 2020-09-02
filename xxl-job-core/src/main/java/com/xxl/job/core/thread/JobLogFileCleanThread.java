@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * job file clean thread
- *
+ * job 日志文件清理线程
  * @author xuxueli 2017-12-29 16:23:43
  */
 public class JobLogFileCleanThread {
@@ -27,6 +27,10 @@ public class JobLogFileCleanThread {
 
     private Thread localThread;
     private volatile boolean toStop = false;
+
+    /**
+     * @param logRetentionDays
+     */
     public void start(final long logRetentionDays){
 
         // limit min value
@@ -105,6 +109,9 @@ public class JobLogFileCleanThread {
         localThread.start();
     }
 
+    /**
+     *
+     */
     public void toStop() {
         toStop = true;
 

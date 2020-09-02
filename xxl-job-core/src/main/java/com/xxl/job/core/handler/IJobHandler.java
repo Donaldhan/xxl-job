@@ -22,7 +22,7 @@ public abstract class IJobHandler {
 
 	/**
 	 * execute handler, invoked when executor receives a scheduling request
-	 *
+	 * 执行handler任务
 	 * @param param
 	 * @return
 	 * @throws Exception
